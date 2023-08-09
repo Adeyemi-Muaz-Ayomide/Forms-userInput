@@ -2,26 +2,35 @@ import { useState } from "react";
 
 const SimpleInput = () => {
   const [enteredName, setEnteredName] = useState("");
-  const [isValid, setIsValid] = useState(true);
+  const [isValid, setIsValid] = useState(false);
+  const [nameIsTyped, setNameIsTyped] = useState(false);
 
   const nameChangeHandler = (e) => {
     setEnteredName(e.target.value);
   };
 
+  const inputBlurHandler = () => {
+    setNameIsTyped(true)
+    if (enteredName.trim() === '') {
+      setIsValid(true);
+    }
+  }
+
   const formSubmitHandler = (e) => {
     e.preventDefault();
 
-    if (enteredName.trim().length === 0) {
-      setIsValid(false);
+    setNameIsTyped(true)
+    if (enteredName.trim() === '') {
+      setIsValid(true);
       return;
     }
 
-    setIsValid(true);
+    setIsValid(false);
     setEnteredName("");
-    console.log(enteredName);
   };
+  const correctedInput = isValid && nameIsTyped;
+  const formClass = correctedInput ? "form-control invalid" : "form-control";
 
-  const formClass = !isValid ? "form-control invalid" : "form-control";
   return (
     <form onSubmit={formSubmitHandler}>
       <div className={formClass}>
@@ -30,9 +39,10 @@ const SimpleInput = () => {
           type="text"
           id="name"
           onChange={nameChangeHandler}
+          onBlur={inputBlurHandler}
           value={enteredName}
         />
-        {!isValid && <p className="error-text">Name cannot be empty</p>}
+        {correctedInput && <p className="error-text">Name cannot be empty</p>}
       </div>
       <div className="form-actions">
         <button>Submit</button>
