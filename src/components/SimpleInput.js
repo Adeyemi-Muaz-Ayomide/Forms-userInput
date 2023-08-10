@@ -2,33 +2,32 @@ import { useState } from "react";
 
 const SimpleInput = () => {
   const [enteredName, setEnteredName] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
   const [nameIsTyped, setNameIsTyped] = useState(false);
+
+  const enteredNameIsValid = enteredName.trim() !== "";
+  const correctedInput = !enteredNameIsValid && nameIsTyped;
 
   const nameChangeHandler = (e) => {
     setEnteredName(e.target.value);
   };
 
   const inputBlurHandler = () => {
-    setNameIsTyped(true)
-    if (enteredName.trim() === '') {
-      setIsValid(true);
-    }
-  }
+    setNameIsTyped(true);
+  };
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
+    setNameIsTyped(true);
 
-    setNameIsTyped(true)
-    if (enteredName.trim() === '') {
-      setIsValid(true);
+    if (!enteredNameIsValid) {
       return;
     }
 
-    setIsValid(false);
     setEnteredName("");
+    setNameIsTyped(false);
   };
-  const correctedInput = isValid && nameIsTyped;
+
   const formClass = correctedInput ? "form-control invalid" : "form-control";
 
   return (
